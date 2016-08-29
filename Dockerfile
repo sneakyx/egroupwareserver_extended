@@ -1,4 +1,4 @@
-FROM sneaky/egroupware-apps:without_apps
+FROM sneaky/egroupware:latest
 MAINTAINER André Scholz <info@rothaarsystems.de>
 # still beta
 # V 2016-08-29-207-30
