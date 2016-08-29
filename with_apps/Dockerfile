@@ -1,12 +1,12 @@
-FROM sneaky/egroupware
+FROM sneaky/egroupware-apps:without_apps
 MAINTAINER André Scholz <info@rothaarsystems.de>
 # still beta
-# V 2016-08-27-21-40
+# V 2016-08-29-207-30
 
 # load newest version of apps
 RUN apt-get update \
 	&& apt-get install unzip \
-	&& wget -P /var/www http://downloads.sourceforge.net/project/rosin/current/rosine-2016-08-27-20-00.zip \
+	&& wget -P /var/www http://downloads.sourceforge.net/project/rosin/current/rosine-2016-08-27-21-45.zip \
 	&& mv /var/www/rosine*.zip /var/www/html/egroupware/rosine.zip \
 	&& unzip /var/www/html/egroupware/rosine.zip -d /var/www/html/egroupware/ \
 	&& mv /var/www/html/egroupware/ROSInE /var/www/html/egroupware/rosine \
