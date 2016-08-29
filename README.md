@@ -22,7 +22,7 @@ It can easily configurated to assist You with your work. It is easy to use and w
 # 1. Installation / Configuration
 ## a) helpful script 
 For starting, stopping and updating my egroupware containers, I use my script container_control.sh, which You can download from 
-[github](https://github.com/sneakyx/egroupwareserver/blob/master/assets/container_control.sh)
+[github](https://github.com/sneakyx/egroupwareserver_extended/blob/master/assets/container_control.sh)
 
 ## or b) without script
 
