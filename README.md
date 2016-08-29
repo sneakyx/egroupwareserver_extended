@@ -55,7 +55,7 @@ To start the egroupware container, just use:
 	-p 4321:80 \
 	-v /home/egroupware/xxx/data:/var/lib/egroupware \
 	--link mysql-egroupware-xxx:mysql \
-	sneaky/egroupware	
+	sneaky/egroupware-extended	
 
 -> Please replace xxx with Your favourite name and 4321 with the port projected for using. If You don't want to map the port, just leave the line "-p 4321:80"<-
 
