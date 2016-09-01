@@ -11,7 +11,7 @@ set_config() {
 	value="$2"
 	php_escaped_value="$(php -r 'var_export($argv[1]);' "$value")"
 	sed_escaped_value="$(echo "$php_escaped_value" | sed 's/[\/&]/\\&/g')"
-    sed -ri "s/(['\"])?$key(['\"]).*/\'$key\' => $sed_escaped_value/" /var/lib/egroupware/header.inc.php
+    sed -ri "s/(['\"])?$key(['\"]).*/\'$key\' => \'$sed_escaped_value\',/" /var/lib/egroupware/header.inc.php
 
 }
 
@@ -32,8 +32,8 @@ if [ -f /var/lib/egroupware/header.inc.php ] ;
 
 then
 	
-	set_config 'DB_HOST' "$MYSQL_PORT_3306_TCP_ADDR"
-	set_config 'DB_PORT' "$MYSQL_PORT_3306_TCP_PORT"
+	set_config 'db_host' "$MYSQL_PORT_3306_TCP_ADDR"
+	set_config 'db_port' "$MYSQL_PORT_3306_TCP_PORT"
 
 fi	
 		
