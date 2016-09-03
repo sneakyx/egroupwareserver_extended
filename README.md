@@ -91,6 +91,11 @@ Remember to put the following informations external, otherwise all data will be 
 - template for rosine
 (see above for example directory hierarchy!)
 
+If You restart the docker container (former stoped with "docker stop xxx" and now start with "docker start xxx") don't forget to update the mysql-IP-adress by using
+
+	docker exec -it xxx /docker-entrypoint.sh update
+
+
 If you have any suggestions, questions or You need a special egroupware application, just contact me via: info@rothaarsystems.de
 
 [![](https://images.microbadger.com/badges/image/sneaky/egroupware-extended.svg)](http://microbadger.com/images/sneaky/egroupware-extended "Get your own image badge on microbadger.com")

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #########################################################################
-#                          build_new_container.sh                       #
+#                          container_control.sh                         #
 #    this script makes it easier to build a new egroupware container    #
 # usage:        build_new_container.sh $name $pass1 $pass2 $port $action#
 # Paramters:                                                            #
@@ -12,7 +12,7 @@
 #               $pass2  password for egroupware user >  with parameter  #
 #               $port   which port should be used?  /   create!         #
 #-----------------------------------------------------------------------#
-#      V 2016-08-23-21-30  made by sneaky(x) or Rothaar Systems         #
+#      V 2016-09-03-11-09  made by sneaky(x) or Rothaar Systems         #
 #                Version for my egroupware apps                         #
 #                        dedicated to my family                         #
 #                   released under Apache 2.0 licence                   #
@@ -32,13 +32,14 @@ case "$1" in
 	start)
 		# just starts container
 		docker start mysql-egroupware-$2 egroupware-$2
+		docker exec -it egroupware-$2 /docker-entrypoint.sh update # this is to update the IP-Adresses of mysql server
 		echo container was started
 	;;
 	delete)
 		# stops and deletes container
 		docker stop mysql-egroupware-$2 egroupware-$2
 		docker rm mysql-egroupware-$2 egroupware-$2
-		echo container was deleted, data is stored in /home/egroupware/$1
+		echo container was deleted, data is stored in /home/egroupware/$2
 	;;
 	
 	full-delete)
@@ -58,7 +59,7 @@ case "$1" in
 		fi	
 
 		docker pull mysql
-		docker pull sneaky/egroupware
+		docker pull sneaky/egroupware-extended
 		docker stop mysql-egroupware-$2 egroupware-$2
 		docker rm mysql-egroupware-$2 egroupware-$2
 		
@@ -68,7 +69,7 @@ case "$1" in
 		# creates new images 
 		if  [ -z $3 ] && [ -z $4 ] && [ -z $5 ]; then
 	        echo >&2 'error: missing parameters'
-	        echo >&2 'usage: build_new_container.sh start/stop/update/create $name $root-pass $pass2 $port'
+	        echo >&2 'usage: build_new_container.sh create $name $root-pass $pass2 $port'
 	        exit 1
 		fi	
 		# creating folders
