@@ -3,7 +3,7 @@
 #########################################################################
 #                          container_control.sh                         #
 #    this script makes it easier to build a new egroupware container    #
-# usage:        build_new_container.sh $name $pass1 $pass2 $port $action#
+# usage:        container_control.sh $name $pass1 $pass2 $port $action  #
 # Paramters:                                                            #
 #               $action create/stop/delete/start/update container       #
 #                       (start means existing container!)  (needed)     # 
@@ -12,7 +12,7 @@
 #               $pass2  password for egroupware user >  with parameter  #
 #               $port   which port should be used?  /   create!         #
 #-----------------------------------------------------------------------#
-#      V 2016-09-03-11-09  made by sneaky(x) or Rothaar Systems         #
+#      V 2016-09-24-10-30  made by sneaky(x) or Rothaar Systems         #
 #                Version for my egroupware apps                         #
 #                        dedicated to my family                         #
 #                   released under Apache 2.0 licence                   #
@@ -20,7 +20,7 @@
 #########################################################################
 if  [ -z $2 ]  ; then
         echo >&2 'error: missing parameters'
-        echo >&2 'usage: build_new_container.sh start/stop/update/create/delete/full-delete $name'
+        echo >&2 "usage: container_control.sh $1 name"
         exit 1
 fi
 case "$1" in
@@ -96,6 +96,6 @@ case "$1" in
 	;;
 	*)	
 		echo >&2 'error: missing parameters'
-        echo >&2 'usage: build_new_container.sh start/stop/update/create/delete/full-delete $name'
+        echo >&2 'usage: container_control.sh start/stop/update/create/delete/full-delete $name'
         	
 esac
