@@ -1,6 +1,6 @@
 FROM sneaky/egroupware:latest
 MAINTAINER André Scholz <info@rothaarsystems.de>
-# V 2016-09-24-22-28
+# V 2016-10-24-21-30
 
 # load newest version of apps
 RUN apt-get update \
@@ -16,10 +16,10 @@ RUN apt-get update \
 RUN		sed -i -e 1c"<!-- BEGIN head --><!DOCTYPE html>" /var/www/html/egroupware/pixelegg/head.tpl \
 	&& 	sed -i -e 2c"<html>" /var/www/html/egroupware/pixelegg/head.tpl 
 # overwrite docker-entrypoint.sh
-COPY docker-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh 
+COPY assets/docker-entrypoint.sh /bin/entrypoint.sh 
+RUN chmod +x /bin/entrypoint.sh 
 
 EXPOSE 80 443
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/entrypoint.sh"]
 CMD ["app:start"] 
