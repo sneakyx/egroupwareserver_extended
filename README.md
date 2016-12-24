@@ -94,7 +94,7 @@ Remember to put the following informations external, otherwise all data will be 
 
 If You restart the docker container (former stoped with "docker stop xxx" and now start with "docker start xxx") don't forget to update the mysql-IP-adress by using
 
-	docker exec -it xxx /docker-entrypoint.sh update
+	docker exec -it xxx /bin/docker-entrypoint.sh update
 
 
 If you have any suggestions, questions or You need a special egroupware application, just contact me via: info@rothaarsystems.de
