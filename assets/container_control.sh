@@ -3,7 +3,7 @@
 #########################################################################
 #                          container_control.sh                         #
 #    this script makes it easier to build a new egroupware container    #
-# usage:        container_control.sh $name $pass1 $pass2 $port $action  #
+# usage:        container_control.sh $action $name $pass1 $pass2 $port  #
 # Paramters:                                                            #
 #               $action create/stop/delete/start/update container       #
 #                       (start means existing container!)  (needed)     # 
@@ -12,7 +12,7 @@
 #               $pass2  password for egroupware user >  with parameter  #
 #               $port   which port should be used?  /   create!         #
 #-----------------------------------------------------------------------#
-#      V 2016-09-24-10-30  made by sneaky(x) or Rothaar Systems         #
+#      V 2016-12-28-07-56  made by sneaky(x) or Rothaar Systems         #
 #                Version for my egroupware apps                         #
 #                        dedicated to my family                         #
 #                   released under Apache 2.0 licence                   #
