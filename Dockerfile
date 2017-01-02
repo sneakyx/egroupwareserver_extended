@@ -1,11 +1,11 @@
 FROM sneaky/egroupware:latest
 MAINTAINER André Scholz <info@rothaarsystems.de>
-# V 2017-01-02-12-45
+# V 2017-01-02-13-30
 
 # load newest version of apps
 RUN apt-get update \
 	&& apt-get install unzip \
-	&& wget -P /usr/share http://downloads.sourceforge.net/project/rosin/current/rosine-2017-01-02-12-40.zip \
+	&& wget -P /usr/share http://downloads.sourceforge.net/project/rosin/current/rosine-2017-01-02-13-30.zip \
 	&& mv /usr/share/rosine*.zip /usr/share/egroupware/rosine.zip \
 	&& unzip /usr/share/egroupware/rosine.zip -d /usr/share/egroupware/ \
 	&& mv /usr/share/egroupware/ROSInE /usr/share/egroupware/rosine \
