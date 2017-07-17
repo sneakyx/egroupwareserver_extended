@@ -102,6 +102,16 @@ Remember to put the following informations external, otherwise all data will be 
 If You restart the docker container (former stoped with "docker stop xxx" and now start with "docker start xxx") don't forget to update the mysql-IP-adress by using
 
 	docker exec -it xxx /bin/docker-entrypoint.sh update
+	
+# 5. Mount Your Samba Folders
+Login to Your docker container with
+
+	docker exec -it egroupware-xxx /bin/bash
+then create Your mount points with
+
+	filemanager/cli.php mount --user root_admin --password 123456 'smb://Workgroup\$user:$pass@adressOfServer/path' '/whereToMountInFilemanager'
+
+	
 
 
 If you have any suggestions, questions or You need a special egroupware application, just contact me via: info@rothaarsystems.de
