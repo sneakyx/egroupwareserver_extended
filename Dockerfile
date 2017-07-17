@@ -1,6 +1,6 @@
-FROM sneaky/egroupware:latest
+FROM sneaky/egroupware:master-smb
 MAINTAINER André Scholz <info@rothaarsystems.de>
-# V 2017-02-11
+# V 2017-07-17-21-52
 
 # load newest version of apps
 RUN apt-get update \
