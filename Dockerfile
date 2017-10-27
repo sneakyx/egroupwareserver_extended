@@ -1,6 +1,6 @@
 FROM sneaky/egroupware:latest
 MAINTAINER André Scholz <info@rothaarsystems.de>
-# V 2017-02-11
+# V 2017-10-27
 
 # load newest version of apps
 RUN apt-get update \
@@ -9,7 +9,7 @@ RUN apt-get update \
 	&& unzip /usr/share/egroupware/master.zip -d /usr/share/egroupware/ \
 	&& mv /usr/share/egroupware/rosine-master/ROSInE /usr/share/egroupware/rosine \
 	&& rm /usr/share/egroupware/master.zip \
-	&& rmdir /usr/share/egroupware/rosine-master \
+	&& rm -rf /usr/share/egroupware/rosine-master \
 	&& chmod -R +r+x /usr/share/egroupware/rosine  
 	
 # overwrite standard html from Egroupware because my apps use HTML5 and chmod all changed egroupware files
