@@ -1,6 +1,7 @@
 #!/bin/bash
 ##############################################################################
 #                          container_control.sh                              #
+#					DEVELOP-Version!!!!!									 #
 #    this script makes it easier to build a new egroupware container         #
 # usage:        container_control.sh $action $name $pass1 $pass2 $port $path #
 # Paramters:                                                                 #
@@ -60,7 +61,7 @@ case "$1" in
 		fi	
 
 		docker pull mysql
-		docker pull sneaky/egroupware-extended
+		docker pull sneaky/egroupware-extended:develop
 		docker stop mysql-egroupware-$2 egroupware-$2
 		docker rm mysql-egroupware-$2 egroupware-$2
 		
@@ -93,7 +94,7 @@ case "$1" in
 			-v /home/egroupware/$2/data:/var/lib/egroupware \
 			--link mysql-egroupware-$2:mysql \
 			-e SUBFOLDER=$6 \
-			sneaky/egroupware-extended
+			sneaky/egroupware-extended:develop
 		echo container was created/ updated
 	;;
 	*)	
