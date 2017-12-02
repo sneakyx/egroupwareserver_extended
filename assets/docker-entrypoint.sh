@@ -49,8 +49,9 @@ mkdir --parents /var/lib/egroupware/default/rosine/templates
 touch /var/lib/egroupware/header.inc.php
 
 # create file with database infos
-echo 'db_host = ' $MYSQL_PORT_3306_TCP_ADDR > /var/lib/egroupware/db-config.txt
-echo 'db_port = ' $MYSQL_PORT_3306_TCP_PORT >> /var/lib/egroupware/db-config.txt  
+echo 'db_host = ' $MYSQL_PORT_3306_TCP_ADDR > /var/lib/egroupware/config-now.txt
+echo 'db_port = ' $MYSQL_PORT_3306_TCP_PORT >> /var/lib/egroupware/config-now.txt  
+echo 'www_dir = ' ${SUBFOLDER} >> /var/lib/egroupware/config-now.txt
 
 chown -R www-data:www-data /var/lib/egroupware
 
@@ -75,8 +76,9 @@ if  [ $1 != "update" ]; then  # if container isn't restarted
 	rm -r /usr/share/egroupware/rosine/templates/rosine
 	ln -sf /var/lib/egroupware/default/rosine/templates /usr/share/egroupware/rosine/templates/rosine
 	# Apache gets grumpy about PID files pre-existing
+	mkdir -p /var/www/html$SUBFOLDER
 	rm -f /var/run/apache2/apache2.pid
-	ln -sf /usr/share/egroupware /var/www/html$SUBFOLDER
+	ln -sf /usr/share/egroupware /var/www/html$SUBFOLDER$SUBFOLDER
 	exec apache2 -DFOREGROUND
 	 
 fi
