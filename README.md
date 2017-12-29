@@ -4,15 +4,15 @@
 This dockerfile builds an eGroupware container and inserts my apps. It is based on my egroupware docker image.
 You'll also need a MySQL or MariaDB container for the database.
 
-## 1.2 Egroupware
+## 1.2 EGroupware
 ### General
-Egroupware is a very powerful open source groupware programm. It consists of a calendar app, contacts, infolog, project manager, ticket system and more.
+EGroupware is a very powerful open source groupware programm. It consists of a calendar app, contacts, infolog, project manager, ticket system and more.
 If you need more information on egroupware, just take a look here: [www.egroupware.org](http://www.egroupware.org)
 Although this is a unofficial dockerfile, it uses just the official sources! 
 
 
 ## 1.3 my installed apps
-### ROSInE (Rothaar Systems Open Source Incoive for Egroupware) always the newest version!
+### ROSInE (Rothaar Systems Open Source Incoive for EGroupware) always the newest version!
 
 This is an application just to write invoices, orders, offers and delivery notes. It uses the egroupware addressbook.
 It can easily configurated to assist You with your work. It is easy to use and works with HTML5 and CSS3. If You need special templates and PHP files, feel free to contact me.
@@ -31,7 +31,7 @@ For starting, stopping and updating my egroupware containers, I use my script co
 First, it would be wise to create directories for storing everything in place. I usually pack everything into subfolders under the same superior directory. This way it's easier to create a backup using rsync. (Remember to stop the database before creating a backup!)
 I suggest the following directory hierarchy:
 
-/home/egroupware/xxx/mysql  	-> Database
+/home/egroupware/xxx/mysql  -> Database
 /home/egroupware/xxx/data  	-> Egroupware Files, backups, header.inc and templates for rosine
 
 	mkdir -p /home/egroupware/xxx/mysql /home/egroupware/xxx/data
@@ -84,7 +84,9 @@ Now the installation imports also an existing database backup from egroupware!
 
 If the file header.inc.php already exists (former installation), the docker-entrypoint.sh updates the database host ip and port in the header.inc.php automaticly!
  
-If there's a new version of egroupware, You have to start the setup and update the database! (But egroupware will tell You this!) 
+If You updated to a new version of egroupware, don't forget to start the setup and update the database! 
+
+	http://ipOfYourServer:4321/egroupware/setup 
 
 ## 3.2 Setup Rosine
 When You login to egroupware, you have to activate rosine for your the users. If you need assistance with that, don't hesitate to ask me.
