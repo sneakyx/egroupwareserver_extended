@@ -2,7 +2,6 @@
 ## 1.1 General Info
 
 This dockerfile builds an eGroupware container and inserts my apps. It is based on my egroupware docker image.
-The image "develop" uses my egroupware image 17.1 (release candidate) with php 7.
 You'll also need a MySQL or MariaDB container for the database.
 
 ## 1.2 Egroupware
