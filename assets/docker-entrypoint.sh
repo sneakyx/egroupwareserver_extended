@@ -2,7 +2,7 @@
 set -e
 # this is a fork of docker-entrypoint.sh of jrenggli (see also visol/egroupware)
 # made by sneaky of Rothaar Systems (Andre Scholz)
-# V2017-12-03-10-20
+# V2017-12-29-17-30
   
   
 # Replace {key} with value
@@ -34,6 +34,10 @@ then
 	
 	set_config 'db_host' "$MYSQL_PORT_3306_TCP_ADDR"
 	set_config 'db_port' "$MYSQL_PORT_3306_TCP_PORT"
+	# this is for setting the new base directory of egroupware!
+	line_old="define('EGW_SERVER_ROOT','/var/www/html/egroupware');"
+	line_new="define('EGW_SERVER_ROOT','/usr/share/egroupware');"
+	sed "s%$line_old%$line_new%g" /var/lib/egroupware/header.inc.php
 
 fi	
 		
@@ -52,7 +56,7 @@ echo 'www_dir = ' ${SUBFOLDER} >> /var/lib/egroupware/config-now.txt
 #chown -R www-data:www-data /var/lib/egroupware
 # delete origin header.inc from container and use your header.inc
 ln -sf /var/lib/egroupware/header.inc.php /usr/share/egroupware/header.inc.php
-chmod 700 /var/lib/egroupware/header.inc.php
+# chmod 700 /var/lib/egroupware/header.inc.php
 
 if [ ${SUBFOLDER: -1} == "/" ]; then
 	# this is for leaving the last slash 
@@ -61,7 +65,7 @@ fi
 
 if [ -z "$SUBFOLDER" ]; then
 	# this is for the case that no subfolder is passed  
-	rmdir /var/www/html
+	echo rmdir /var/www/html
 elif [ ${SUBFOLDER:0:1} != "/" ]; then
 	# this is for the case that the first slash is forgotten
 	SUBFOLDER="/${SUBFOLDER}"
@@ -70,7 +74,7 @@ fi
 if  [ $1 != "update" ]; then  # if container isn't restarted
 	# Apache gets grumpy about PID files pre-existing
 	#rm -f /var/run/apache2/apache2.pid
-
+	#ln -sf /usr/share/egroupware /var/www/html$SUBFOLDER
 	exec /bin/bash -c "source /etc/apache2/envvars && apache2 -DFOREGROUND"
 	 
 fi
