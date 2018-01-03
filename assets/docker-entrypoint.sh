@@ -2,7 +2,7 @@
 set -e
 # this is a fork of docker-entrypoint.sh of jrenggli (see also visol/egroupware)
 # made by sneaky of Rothaar Systems (Andre Scholz)
-# V2017-12-29-17-30
+# V2018-01-03-16-15
   
   
 # Replace {key} with value
@@ -72,7 +72,11 @@ elif [ ${SUBFOLDER:0:1} != "/" ]; then
 fi
 
 if  [ $1 != "update" ]; then  # if container isn't restarted
+	# soft links for the right templates
+	rm -r /usr/share/egroupware/rosine/templates/rosine
+	ln -sf /var/lib/egroupware/default/rosine/templates /usr/share/egroupware/rosine/templates/rosine
 	# Apache gets grumpy about PID files pre-existing
+	
 	#rm -f /var/run/apache2/apache2.pid
 	#ln -sf /usr/share/egroupware /var/www/html$SUBFOLDER
 	exec /bin/bash -c "source /etc/apache2/envvars && apache2 -DFOREGROUND"
