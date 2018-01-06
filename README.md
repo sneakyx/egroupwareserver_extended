@@ -15,6 +15,7 @@ Although this is a unofficial dockerfile, it uses just the official sources!
 ### ROSInE (Rothaar Systems Open Source Incoive for EGroupware) always the newest version!
 
 This is an application just to write invoices, orders, offers and delivery notes. It uses the egroupware addressbook.
+It can now use a basic 	multi-client capability - every user can have an own company!
 It can easily configurated to assist You with your work. It is easy to use and works with HTML5 and CSS3. If You need special templates and PHP files, feel free to contact me.
 
 ### my other apps
