@@ -1,4 +1,4 @@
-FROM sneaky/egroupware:master
+FROM sneaky/egroupware:latest
 MAINTAINER André Scholz <info@rothaarsystems.de>
 # V 2018-01-31
 
