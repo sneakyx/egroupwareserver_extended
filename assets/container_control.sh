@@ -74,8 +74,17 @@ case "$1" in
 	        exit 1
 		fi	
 		# creating folders
-		mkdir -p /home/egroupware/$2/mysql /home/egroupware/$2/data
-		
+		mkdir -p /home/egroupware/$2/mysql /home/egroupware/$2/data/default/backup /home/egroupware/$2/data/default/files
+		touch /home/egroupware/$2/data/header.inc.php
+        chown -R www-data:www-data /home/egroupware/$2/data
+        chmod 0700 /home/egroupware/$2/data/header.inc.php
+        # mysql config for egroupware, problems with new mysql 8.0
+        if [ ! -f "/home/egroupware/$2/mysql.cnf" ]; then
+            touch /home/egroupware/$2/mysql.cnf
+            echo -e "[mysqld]\ndefault_authentication_plugin= mysql_native_password" > /home/egroupware/$2/mysql.cnf
+        fi
+
+
 		# create and run mysql container
 		
 		docker run -d --name mysql-egroupware-$2 \
@@ -83,7 +92,9 @@ case "$1" in
 			-e MYSQL_DATABASE=egroupware \
 			-e MYSQL_USER=egroupware \
 			-e MYSQL_PASSWORD=$4 \
-			-v /home/egroupware/$2/mysql:/var/lib/mysql mysql
+			-v /home/egroupware/$2/mysql:/var/lib/mysql \
+			-v /home/egroupware/$2/mysql.cnf:/etc/mysql/conf.d/egroupware.cnf \
+			mysql
 		
 		# create and run egroupware container
 		
