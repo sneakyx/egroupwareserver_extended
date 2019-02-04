@@ -2,7 +2,7 @@
 set -e
 # this is a fork of docker-entrypoint.sh of jrenggli (see also visol/egroupware)
 # made by sneaky of Rothaar Systems (Andre Scholz)
-# V2018-01-03-16-15
+# V2019-02-04-17-40
   
   
 # Replace {key} with value

@@ -14,7 +14,7 @@
 #               $port   which port should be used?  /   create!              #
 #				$path   subfolder for egroupware (optional)                  #
 #----------------------------------------------------------------------------#
-#      V 2019-01-31        made by sneaky(x) of Rothaar Systems              #
+#      V 2019-02-04        made by sneaky(x) of Rothaar Systems              #
 #                        dedicated to my family                              #
 #                   released under Apache 2.0 licence                        #
 #               http://www.apache.org/licenses/LICENSE-2.0                   #
