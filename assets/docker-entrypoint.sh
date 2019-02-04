@@ -45,18 +45,18 @@ fi
 # data directories
 #
 	
-mkdir --parents /var/lib/egroupware/default/backup
-mkdir --parents /var/lib/egroupware/default/files
+mkdir -p /var/lib/egroupware/default/backup
+mkdir -p /var/lib/egroupware/default/files
+mkdir -p /var/lib/egroupware/default/rosine/templates
+chown -R www-data:www-data /var/lib/egroupware/default
 
 # create file with database infos
 echo 'db_host = ' $MYSQL_PORT_3306_TCP_ADDR > /var/lib/egroupware/config-now.txt
 echo 'db_port = ' $MYSQL_PORT_3306_TCP_PORT >> /var/lib/egroupware/config-now.txt  
 echo 'www_dir = ' ${SUBFOLDER} >> /var/lib/egroupware/config-now.txt
 
-#chown -R www-data:www-data /var/lib/egroupware
 # delete origin header.inc from container and use your header.inc
 ln -sf /var/lib/egroupware/header.inc.php /usr/share/egroupware/header.inc.php
-# chmod 700 /var/lib/egroupware/header.inc.php
 
 if [ "${SUBFOLDER: -1}" == "/" ]; then
 	# this is for leaving the last slash 
@@ -73,12 +73,9 @@ fi
 
 if  [ $1 != "update" ]; then  # if container isn't restarted
 	# soft links for the right templates
-	rm -rf /usr/share/egroupware/rosine/templates/rosine
+	mkdir -p /usr/share/egroupware/rosine/templates/rosine
 	ln -sf /var/lib/egroupware/default/rosine/templates /usr/share/egroupware/rosine/templates/rosine
-	# Apache gets grumpy about PID files pre-existing
-	
-	#rm -f /var/run/apache2/apache2.pid
-	#ln -sf /usr/share/egroupware /var/www/html$SUBFOLDER
+
 	exec /bin/bash -c "source /etc/apache2/envvars && apache2 -DFOREGROUND"
 	 
 fi
