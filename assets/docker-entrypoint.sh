@@ -58,7 +58,7 @@ echo 'www_dir = ' ${SUBFOLDER} >> /var/lib/egroupware/config-now.txt
 ln -sf /var/lib/egroupware/header.inc.php /usr/share/egroupware/header.inc.php
 # chmod 700 /var/lib/egroupware/header.inc.php
 
-if [ ${SUBFOLDER: -1} == "/" ]; then
+if [ "${SUBFOLDER: -1}" == "/" ]; then
 	# this is for leaving the last slash 
  	SUBFOLDER="${SUBFOLDER:0: -1}"
 fi
@@ -66,14 +66,14 @@ fi
 if [ -z "$SUBFOLDER" ]; then
 	# this is for the case that no subfolder is passed  
 	echo rmdir /var/www/html
-elif [ ${SUBFOLDER:0:1} != "/" ]; then
+elif [ "${SUBFOLDER:0:1}" != "/" ]; then
 	# this is for the case that the first slash is forgotten
 	SUBFOLDER="/${SUBFOLDER}"
 fi
 
 if  [ $1 != "update" ]; then  # if container isn't restarted
 	# soft links for the right templates
-	rm -r /usr/share/egroupware/rosine/templates/rosine
+	rm -rf /usr/share/egroupware/rosine/templates/rosine
 	ln -sf /var/lib/egroupware/default/rosine/templates /usr/share/egroupware/rosine/templates/rosine
 	# Apache gets grumpy about PID files pre-existing
 	
