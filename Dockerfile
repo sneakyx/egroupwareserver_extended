@@ -1,6 +1,6 @@
 FROM sneaky/egroupware:latest
 MAINTAINER André Scholz <info@rothaarsystems.de>
-# V 2019-02-07
+# V 2019-02-08
 
 # load newest version of apps
 RUN apt-get update \
