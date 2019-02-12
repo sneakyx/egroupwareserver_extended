@@ -73,7 +73,7 @@ fi
 
 if  [ $1 != "update" ]; then  # if container isn't restarted
 	# soft links for the right templates
-	mkdir -p /usr/share/egroupware/rosine/templates/rosine
+	rm -rf /usr/share/egroupware/rosine/templates/rosine
 	ln -sf /var/lib/egroupware/default/rosine/templates /usr/share/egroupware/rosine/templates/rosine
 
 	exec /bin/bash -c "source /etc/apache2/envvars && apache2 -DFOREGROUND"
