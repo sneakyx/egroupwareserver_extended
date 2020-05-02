@@ -1,82 +1,68 @@
 #!/bin/bash
-set -e
-# this is a fork of docker-entrypoint.sh of jrenggli (see also visol/egroupware)
-# made by sneaky of Rothaar Systems (Andre Scholz)
-# V2019-02-04-17-40
-  
-  
-# Replace {key} with value
-set_config() {
-	key="$1"
-	value="$2"
-	php_escaped_value="$(php -r 'var_export($argv[1]);' "$value")"
-	sed_escaped_value="$(echo "$php_escaped_value" | sed 's/[\/&]/\\&/g')"
-    sed -ri "s/(['\"])?$key(['\"]).*/\'$key\' => $sed_escaped_value,/" /var/lib/egroupware/header.inc.php
+# original by egroupware GmbH
+# version 2020-05-02 - changed by sneaky
 
+set -e
+
+# if EGW_APC_SHM_SIZE is set in environment, propagate value to apcu.ini
+test -n "$EGW_APC_SHM_SIZE" && {
+  grep "apc.shm_size" /etc/php/7.3/fpm/conf.d/20-apcu.ini >/dev/null && \
+    sed -e "s/^;\?apc.shm_size.*/apc.shm_size=$EGW_APC_SHM_SIZE/g" \
+      -i /etc/php/7.3/fpm/conf.d/20-apcu.ini || \
+    echo "apc.shm_size=$EGW_APC_SHM_SIZE" >> /etc/php/7.3/fpm/conf.d/20-apcu.ini
 }
 
-# database configuration
-#
+# if EGW_SESSION_TIMEOUT is set in environment, propagate value to php.ini
+test -n "$EGW_SESSION_TIMEOUT" && test "$EGW_SESSION_TIMEOUT" -ge 1440 && \
+	sed -e "s/^;\?session.gc_maxlifetime.*/session.gc_maxlifetime=$EGW_SESSION_TIMEOUT/g" \
+		-i /etc/php/7.3/fpm/php.ini
 
-if [ -z "$MYSQL_PORT_3306_TCP" ]; then
-	echo >&2 'error: missing MYSQL_PORT_3306_TCP environment variable'
-	echo >&2 '  Did you forget to --link some_mysql_container:mysql ?'
-	exit 1
-fi
+# sources of extra apps merged into our sources (--ignore-existing to NOT overwrite any regular sources!)
+test -d /usr/share/egroupware-extra && \
+	rsync -a --ignore-existing /usr/share/egroupware-extra/ /usr/share/egroupware/
 
-if [ -f /var/lib/egroupware/header.inc.php ] ;
-# if header file exists correct the tcp-port and tcp address
-# otherwise (first time startup) the data has to be add manually while installation
-# read the necessary data from file /home/egroupware/xxx/data/db-info.txt 
-# xxx - is the directory you used for storing data
+# check and if necessary change ownership of /var/lib/egroupware
+test $(stat -c '%U' /var/lib/egroupware) = "www-data" || \
+	chown -R www-data:www-data /var/lib/egroupware
 
-then
-	
-	set_config 'db_host' "$MYSQL_PORT_3306_TCP_ADDR"
-	set_config 'db_port' "$MYSQL_PORT_3306_TCP_PORT"
-	# this is for setting the new base directory of egroupware!
-	line_old="define('EGW_SERVER_ROOT','/var/www/html/egroupware');"
-	line_new="define('EGW_SERVER_ROOT','/usr/share/egroupware');"
-	sed -i "s%$line_old%$line_new%g" /var/lib/egroupware/header.inc.php
+# add private CA so egroupware can validate your certificate to talk to Collabora or Rocket.Chat
+test -f /usr/local/share/ca-certificates/private-ca.crt &&
+	update-ca-certificates
 
-fi	
-		
-#
-# data directories
-#
-	
-mkdir -p /var/lib/egroupware/default/backup
-mkdir -p /var/lib/egroupware/default/files
-mkdir -p /var/lib/egroupware/default/rosine/templates
-chown -R www-data:www-data /var/lib/egroupware/default
+# write install-log in /var/lib/egroupware (only readable by root!)
+LOG=/var/lib/egroupware/egroupware-docker-install.log
+touch $LOG
+chmod 600 $LOG
 
-# create file with database infos
-echo 'db_host = ' $MYSQL_PORT_3306_TCP_ADDR > /var/lib/egroupware/config-now.txt
-echo 'db_port = ' $MYSQL_PORT_3306_TCP_PORT >> /var/lib/egroupware/config-now.txt  
-echo 'www_dir = ' ${SUBFOLDER} >> /var/lib/egroupware/config-now.txt
+max_retries=10
+export try=0
+# EGW_SKIP_INSTALL=true skips initial installation (no header.inc.php yet)
+until [ -n "$EGW_SKIP_INSTALL" -a ! -f /var/lib/egroupware/header.inc.php ] || \
+	php /usr/share/egroupware/doc/rpm-build/post_install.php \
+	--start_webserver "" --autostart_webserver "" \
+	--start_db "" --autostart_db "" \
+	--db_type "${EGW_DB_TYPE:-mysqli}" \
+	--db_host "${EGW_DB_HOST:-localhost}" \
+	--db_grant_host "${EGW_DB_GRANT_HOST:-localhost}" \
+	--db_root "${EGW_DB_ROOT:-root}" \
+	--db_root_pw   "${EGW_DB_ROOT_PW:-}" \
+	--db_name "${EGW_DB_NAME:-egroupware}" \
+	--db_user "${EGW_DB_USER:-egroupware}" \
+	--db_pass "${EGW_DB_PASS:-}"
+do
+	if [ "$try" -gt "$max_retries" ]; then
+		echo "Installing of EGroupware failed!"
+		break
+	fi
+	echo "Retrying EGroupware installation in 3 seconds ..."
+	try=$((try+1))
+	sleep 3s
+done 2>&1 | tee -a $LOG
 
-# delete origin header.inc from container and use your header.inc
-ln -sf /var/lib/egroupware/header.inc.php /usr/share/egroupware/header.inc.php
+# as we can NOT exit from until (runs a subshell), we need to check and do it here
+[ "$(tail -1 $LOG)" = "Installing of EGroupware failed!" ] && exit 1
 
-if [ "${SUBFOLDER: -1}" == "/" ]; then
-	# this is for leaving the last slash 
- 	SUBFOLDER="${SUBFOLDER:0: -1}"
-fi
+# to run async jobs
+service cron start
 
-if [ -z "$SUBFOLDER" ]; then
-	# this is for the case that no subfolder is passed  
-	echo rmdir /var/www/html
-elif [ "${SUBFOLDER:0:1}" != "/" ]; then
-	# this is for the case that the first slash is forgotten
-	SUBFOLDER="/${SUBFOLDER}"
-fi
-
-if  [ $1 != "update" ]; then  # if container isn't restarted
-	# soft links for the right templates
-	rm -rf /usr/share/egroupware/rosine/templates/rosine
-	ln -sf /var/lib/egroupware/default/rosine/templates /usr/share/egroupware/rosine/templates/rosine
-
-	exec /bin/bash -c "source /etc/apache2/envvars && apache2 -DFOREGROUND"
-	 
-fi
-exit 0
+exec "$@"

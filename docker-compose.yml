@@ -1,0 +1,3 @@
+version '3'
+  image: sneaky/egroupware-extended
+    ports
